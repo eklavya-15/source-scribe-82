@@ -41,7 +41,16 @@ export default {
 				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					glow: 'hsl(var(--primary-glow))',
+				},
+				accent: {
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))',
+					coral: 'hsl(var(--accent-coral))',
+					emerald: 'hsl(var(--accent-emerald))',
+					amber: 'hsl(var(--accent-amber))',
+					rose: 'hsl(var(--accent-rose))',
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -54,10 +63,6 @@ export default {
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',
 					foreground: 'hsl(var(--muted-foreground))'
-				},
-				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
@@ -88,10 +93,14 @@ export default {
 				'sm': 'var(--shadow-sm)',
 				'DEFAULT': 'var(--shadow)',
 				'lg': 'var(--shadow-lg)',
+				'glow': 'var(--shadow-glow)',
 			},
 			backgroundImage: {
 				'gradient-primary': 'var(--gradient-primary)',
 				'gradient-surface': 'var(--gradient-surface)',
+				'gradient-coral': 'var(--gradient-coral)',
+				'gradient-emerald': 'var(--gradient-emerald)',
+				'gradient-sunset': 'var(--gradient-sunset)',
 			},
 			transitionTimingFunction: {
 				'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',

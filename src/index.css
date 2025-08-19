@@ -6,52 +6,63 @@
 
 @layer base {
   :root {
-    /* Core backgrounds */
-    --background: 0 0% 100%;
-    --foreground: 216 12% 8%;
-    --surface: 0 0% 98%;
-    --surface-secondary: 210 17% 95%;
+    /* Core backgrounds - Warm, inviting tones */
+    --background: 32 100% 99%;
+    --foreground: 223 47% 11%;
+    --surface: 34 57% 97%;
+    --surface-secondary: 32 44% 94%;
     
-    /* Interactive elements */
-    --primary: 213 94% 68%;
-    --primary-hover: 213 94% 62%;
+    /* Interactive elements - Vibrant gradient palette */
+    --primary: 264 89% 74%;
+    --primary-hover: 264 89% 68%;
     --primary-foreground: 0 0% 100%;
+    --primary-glow: 270 100% 86%;
     
-    /* Notebook aesthetics */
-    --notebook-paper: 0 0% 99%;
-    --notebook-line: 210 16% 93%;
-    --notebook-margin: 210 20% 90%;
+    /* Secondary accent colors */
+    --accent-coral: 14 100% 72%;
+    --accent-emerald: 151 83% 57%;
+    --accent-amber: 43 100% 68%;
+    --accent-rose: 330 81% 75%;
     
-    /* Text hierarchy */
-    --text-primary: 216 12% 8%;
-    --text-secondary: 215 13% 34%;
-    --text-muted: 215 8% 56%;
-    --text-placeholder: 214 7% 67%;
+    /* Notebook aesthetics - Cream paper feel */
+    --notebook-paper: 33 100% 98%;
+    --notebook-line: 32 22% 90%;
+    --notebook-margin: 30 25% 85%;
     
-    /* Semantic colors */
-    --success: 142 71% 45%;
+    /* Text hierarchy - Rich, readable colors */
+    --text-primary: 223 47% 11%;
+    --text-secondary: 220 26% 25%;
+    --text-muted: 218 11% 48%;
+    --text-placeholder: 216 8% 62%;
+    
+    /* Semantic colors - Vibrant and friendly */
+    --success: 151 83% 57%;
     --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
-    --destructive: 0 84% 60%;
+    --warning: 43 100% 68%;
+    --warning-foreground: 223 47% 11%;
+    --destructive: 0 75% 65%;
     --destructive-foreground: 0 0% 100%;
     
-    /* Borders and inputs */
-    --border: 210 16% 93%;
-    --border-subtle: 210 12% 96%;
-    --input: 210 16% 93%;
-    --input-focus: 213 94% 68%;
-    --ring: 213 94% 68%;
+    /* Borders and inputs - Soft, elegant */
+    --border: 32 22% 90%;
+    --border-subtle: 33 33% 93%;
+    --input: 32 22% 90%;
+    --input-focus: 264 89% 74%;
+    --ring: 264 89% 74%;
     
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(220 25% 25% / 0.05);
-    --shadow: 0 4px 6px -1px hsl(220 25% 25% / 0.1), 0 2px 4px -1px hsl(220 25% 25% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(220 25% 25% / 0.1), 0 4px 6px -2px hsl(220 25% 25% / 0.05);
-    --shadow-notebook: 0 2px 8px -1px hsl(220 20% 35% / 0.08);
+    /* Enhanced shadows with color */
+    --shadow-sm: 0 1px 3px 0 hsl(264 20% 45% / 0.08);
+    --shadow: 0 4px 12px -2px hsl(264 20% 45% / 0.12), 0 2px 6px -1px hsl(264 20% 45% / 0.08);
+    --shadow-lg: 0 12px 24px -4px hsl(264 20% 45% / 0.15), 0 6px 12px -2px hsl(264 20% 45% / 0.1);
+    --shadow-notebook: 0 3px 12px -1px hsl(264 30% 50% / 0.1);
+    --shadow-glow: 0 0 24px hsl(270 100% 86% / 0.3);
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(213 94% 68%), hsl(217 91% 60%));
-    --gradient-surface: linear-gradient(180deg, hsl(0 0% 99%), hsl(210 17% 97%));
+    /* Beautiful gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(264 89% 74%), hsl(270 100% 86%), hsl(14 100% 72%));
+    --gradient-surface: linear-gradient(180deg, hsl(33 100% 98%), hsl(32 44% 94%));
+    --gradient-coral: linear-gradient(135deg, hsl(14 100% 72%), hsl(330 81% 75%));
+    --gradient-emerald: linear-gradient(135deg, hsl(151 83% 57%), hsl(157 73% 44%));
+    --gradient-sunset: linear-gradient(135deg, hsl(14 100% 72%), hsl(43 100% 68%), hsl(264 89% 74%));
     
     /* Legacy mappings for compatibility */
     --card: var(--notebook-paper);
