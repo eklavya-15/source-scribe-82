@@ -6,12 +6,13 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Upload, Link, FileText, Trash2, X } from 'lucide-react';
+;
 
 export interface Source {
   id: string;
   type: 'text' | 'pdf' | 'link';
   title: string;
-  content?: string;
+  content?: string; 
   url?: string;
   fileName?: string;
   addedAt: Date;
@@ -36,7 +37,7 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
   const [linkTitle, setLinkTitle] = useState('');
   const { toast } = useToast();
 
-  const handleTextSubmit = () => {
+  const handleTextSubmit = async () => {
     if (!textContent.trim() || !textTitle.trim()) {
       toast({
         title: "Missing information",
@@ -46,23 +47,53 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
       return;
     }
 
-    onAddSource({
-      type: 'text',
-      title: textTitle,
-      content: textContent,
-    });
+    try {
+      // Send text to backend for embedding
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/embed-text`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: textTitle,
+          content: textContent,
+        }),
+      });
 
-    setTextContent('');
-    setTextTitle('');
-    setShowTextInput(false);
-    
-    toast({
-      title: "Text source added",
-      description: `Added "${textTitle}" to your sources`,
-    });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: "Failed to parse error response" }));
+        throw new Error(errorData.error || `HTTP ${res.status}: Failed to embed text`);
+      }
+
+      const result = await res.json();
+      console.log("Text embedding response:", result);
+
+      // Add source to UI after successful embedding
+      onAddSource({
+        type: 'text',
+        title: textTitle,
+        content: textContent,
+      });
+
+      setTextContent('');
+      setTextTitle('');
+      setShowTextInput(false);
+      
+      toast({
+        title: "Text source added",
+        description: result.message || `Added "${textTitle}" to your sources`,
+      });
+    } catch (err) {
+      const error = err as Error;
+      toast({
+        title: "Text embedding failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleLinkSubmit = () => {
+  const handleLinkSubmit = async () => {
     if (!linkUrl.trim() || !linkTitle.trim()) {
       toast({
         title: "Missing information",
@@ -72,27 +103,57 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
       return;
     }
 
-    onAddSource({
-      type: 'link',
-      title: linkTitle,
-      url: linkUrl,
-    });
+    try {
+      // Send URL to backend for embedding
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/embed-url`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: linkTitle,
+          url: linkUrl,
+        }),
+      });
 
-    setLinkUrl('');
-    setLinkTitle('');
-    setShowLinkInput(false);
-    
-    toast({
-      title: "Link source added",
-      description: `Added "${linkTitle}" to your sources`,
-    });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: "Failed to parse error response" }));
+        throw new Error(errorData.error || `HTTP ${res.status}: Failed to embed URL`);
+      }
+
+      const result = await res.json();
+      console.log("URL embedding response:", result);
+
+      // Add source to UI after successful embedding
+      onAddSource({
+        type: 'link',
+        title: linkTitle,
+        url: linkUrl,
+      });
+
+      setLinkUrl('');
+      setLinkTitle('');
+      setShowLinkInput(false);
+      
+      toast({
+        title: "Link source added",
+        description: result.message || `Added "${linkTitle}" to your sources`,
+      });
+    } catch (err) {
+      const error = err as Error;
+      toast({
+        title: "URL embedding failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
-  const handlePdfUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePdfUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
-    if (file.type !== 'application/pdf') {
+  
+    if (file.type !== "application/pdf") {
       toast({
         title: "Invalid file type",
         description: "Please select a PDF file",
@@ -100,21 +161,58 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
       });
       return;
     }
+  
+    try {
+      // send file to backend
+      const formData = new FormData();
+      formData.append("pdf", file);
+      console.log("Backend URL:", import.meta.env.VITE_BACKEND_URL);
+      console.log("File being sent:", file.name, file.size, file.type);
+      
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/embed-pdf`, {
+        method: "POST",
+        body: formData,
+      }).catch(error => {
+        console.error("Fetch error:", error);
+        throw new Error(`Network error: ${error.message}`);
+      });
 
-    onAddSource({
-      type: 'pdf',
-      title: file.name,
-      fileName: file.name,
-    });
+      console.log("Response status:", res.status);
+      console.log("Response ok:", res.ok);
+      console.log("Response headers:", Object.fromEntries(res.headers.entries()));
 
-    toast({
-      title: "PDF uploaded",
-      description: `Added "${file.name}" to your sources`,
-    });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: "Failed to parse error response" }));
+        throw new Error(errorData.error || `HTTP ${res.status}: Failed to upload PDF`);
+      }
 
+      const result = await res.json();
+      console.log("Backend response:", result);
+
+      // Once backend confirms embedding success, update UI state
+      onAddSource({
+        type: "pdf",
+        title: file.name,
+        fileName: file.name,
+      });
+
+      toast({
+        title: "PDF uploaded",
+        description: result.message || `Embedded and added "${file.name}"`,
+      });
+    } catch (err: unknown) {
+      const error = err as Error;
+      toast({
+        title: "Upload failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  
     // Reset the input
-    event.target.value = '';
+    event.target.value = "";
   };
+  
 
   const getSourceIcon = (type: Source['type']) => {
     switch (type) {
