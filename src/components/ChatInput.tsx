@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -15,11 +15,25 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
+export interface ChatInputRef {
+  clearChat: () => void;
+}
+
+export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(({ onSendMessage }, ref) => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const { toast } = useToast();
+
+  // Function to clear chat history
+  const clearChatHistory = () => {
+    setChatHistory([]);
+  };
+
+  // Expose clear function to parent component
+  useImperativeHandle(ref, () => ({
+    clearChat: clearChatHistory
+  }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,7 +110,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
           <div className="text-center text-muted-foreground py-8">
             <Bot className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">Start a conversation with your AI assistant</p>
-            <p className="text-xs mt-1">Ask questions about your sources</p>
+            <p className="text-xs mt-1">Type a message to begin chatting</p>
           </div>
         ) : (
           chatHistory.map((chatMessage) => (
@@ -140,7 +154,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
         <Input
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Ask a question about your sources..."
+          placeholder="Type your message..."
           disabled={isLoading}
           className="flex-1"
         />
@@ -158,4 +172,4 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
       </form>
     </div>
   );
-};
+});

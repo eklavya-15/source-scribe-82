@@ -6,7 +6,6 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Upload, Link, FileText, Trash2, X } from 'lucide-react';
-;
 
 export interface Source {
   id: string;
@@ -194,6 +193,13 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
         type: "pdf",
         title: file.name,
         fileName: file.name,
+      });
+
+      // Only clear chat, don't clear sources
+      // Clear chat
+      // Clear all sources from UI
+      sources.forEach(source => {
+        onRemoveSource(source.id);
       });
 
       toast({
