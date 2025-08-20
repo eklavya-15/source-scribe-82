@@ -31,16 +31,14 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
   const [showTextInput, setShowTextInput] = useState(false);
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [textContent, setTextContent] = useState('');
-  const [textTitle, setTextTitle] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
-  const [linkTitle, setLinkTitle] = useState('');
   const { toast } = useToast();
 
   const handleTextSubmit = async () => {
-    if (!textContent.trim() || !textTitle.trim()) {
+    if (!textContent.trim()) {
       toast({
         title: "Missing information",
-        description: "Please provide both title and content",
+        description: "Please provide text content",
         variant: "destructive",
       });
       return;
@@ -53,7 +51,7 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: textTitle,
+          title: `Text Source ${new Date().toLocaleString()}`,
           content: textContent,
         }),
       });
@@ -67,17 +65,16 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
 
       onAddSource({
         type: 'text',
-        title: textTitle,
+        title: `Text Source ${new Date().toLocaleString()}`,
         content: textContent,
       });
 
       setTextContent('');
-      setTextTitle('');
       setShowTextInput(false);
       
       toast({
         title: "Text source added",
-        description: result.message || `Added "${textTitle}" to your sources`,
+        description: result.message || "Text source added successfully",
       });
     } catch (err) {
       const error = err as Error;
@@ -90,10 +87,10 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
   };
 
   const handleLinkSubmit = async () => {
-    if (!linkUrl.trim() || !linkTitle.trim()) {
+    if (!linkUrl.trim()) {
       toast({
         title: "Missing information",
-        description: "Please provide both title and URL",
+        description: "Please provide a URL",
         variant: "destructive",
       });
       return;
@@ -106,7 +103,7 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: linkTitle,
+          title: `Link Source ${new Date().toLocaleString()}`,
           url: linkUrl,
         }),
       });
@@ -120,17 +117,16 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
 
       onAddSource({
         type: 'link',
-        title: linkTitle,
+        title: `Link Source ${new Date().toLocaleString()}`,
         url: linkUrl,
       });
 
       setLinkUrl('');
-      setLinkTitle('');
       setShowLinkInput(false);
       
       toast({
         title: "Link source added",
-        description: result.message || `Added "${linkTitle}" to your sources`,
+        description: result.message || "Link source added successfully",
       });
     } catch (err) {
       const error = err as Error;
@@ -318,12 +314,6 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
         {showTextInput && (
           <Card className="p-3 bg-notebook-paper shadow-sm">
             <div className="space-y-3">
-              <Input
-                placeholder="Source title..."
-                value={textTitle}
-                onChange={(e) => setTextTitle(e.target.value)}
-                className="text-sm"
-              />
               <Textarea
                 placeholder="Paste your text content here..."
                 value={textContent}
@@ -350,12 +340,6 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
         {showLinkInput && (
           <Card className="p-3 bg-notebook-paper shadow-sm">
             <div className="space-y-3">
-              <Input
-                placeholder="Source title..."
-                value={linkTitle}
-                onChange={(e) => setLinkTitle(e.target.value)}
-                className="text-sm"
-              />
               <Input
                 placeholder="https://example.com"
                 value={linkUrl}
