@@ -212,7 +212,39 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
     // Reset the input
     event.target.value = "";
   };
-  
+
+  const handleClearAllSources = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sources/clear`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: "Failed to parse error response" }));
+        throw new Error(errorData.error || `HTTP ${res.status}: Failed to clear sources`);
+      }
+
+      const result = await res.json();
+      console.log("Clear sources response:", result);
+
+      // Clear all sources from UI
+      sources.forEach(source => {
+        onRemoveSource(source.id);
+      });
+
+      toast({
+        title: "All sources cleared",
+        description: "All sources and embeddings have been removed",
+      });
+    } catch (err) {
+      const error = err as Error;
+      toast({
+        title: "Clear failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
 
   const getSourceIcon = (type: Source['type']) => {
     switch (type) {
@@ -242,10 +274,24 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
     <div className="flex flex-col h-full bg-surface border-r border-border">
       {/* Header */}
       <div className="p-4 border-b border-border bg-gradient-surface">
-        <h2 className="text-lg font-semibold text-text-primary">Your Sources</h2>
-        <p className="text-sm text-text-muted mt-1">
-          {sources.length} source{sources.length !== 1 ? 's' : ''} added
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-text-primary">Your Sources</h2>
+            <p className="text-sm text-text-muted mt-1">
+              {sources.length} source{sources.length !== 1 ? 's' : ''} added
+            </p>
+          </div>
+          {sources.length > 0 && (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleClearAllSources}
+              className="text-xs"
+            >
+              Clear All
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Add Source Controls */}
