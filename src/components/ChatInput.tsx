@@ -25,12 +25,10 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(({ onSendMessa
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const { toast } = useToast();
 
-  // Function to clear chat history
   const clearChatHistory = () => {
     setChatHistory([]);
   };
 
-  // Expose clear function to parent component
   useImperativeHandle(ref, () => ({
     clearChat: clearChatHistory
   }));
@@ -42,7 +40,6 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(({ onSendMessa
     const userMessage = message.trim();
     setIsLoading(true);
     
-    // Add user message to chat history
     const userChatMessage: ChatMessage = {
       id: Date.now().toString(),
       type: 'user',
@@ -54,7 +51,6 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(({ onSendMessa
     setMessage('');
     
     try {
-      // Send message to backend chat endpoint
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat`, {
         method: "POST",
         headers: {
@@ -71,7 +67,6 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(({ onSendMessa
       const result = await res.json();
       console.log("Chat response:", result);
 
-      // Add AI response to chat history
       const aiChatMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
@@ -81,15 +76,7 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(({ onSendMessa
       
       setChatHistory(prev => [...prev, aiChatMessage]);
 
-      // Call the parent function with the response
       onSendMessage(userMessage);
-      
-      // Show success toast
-      toast({
-        title: "Chat response received",
-        description: "Your question has been answered based on your sources!",
-      });
-
     } catch (err) {
       const error = err as Error;
       toast({

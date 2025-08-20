@@ -47,7 +47,6 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
     }
 
     try {
-      // Send text to backend for embedding
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/embed-text`, {
         method: "POST",
         headers: {
@@ -65,9 +64,7 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
       }
 
       const result = await res.json();
-      console.log("Text embedding response:", result);
 
-      // Add source to UI after successful embedding
       onAddSource({
         type: 'text',
         title: textTitle,
@@ -103,7 +100,6 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
     }
 
     try {
-      // Send URL to backend for embedding
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/embed-url`, {
         method: "POST",
         headers: {
@@ -121,9 +117,7 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
       }
 
       const result = await res.json();
-      console.log("URL embedding response:", result);
 
-      // Add source to UI after successful embedding
       onAddSource({
         type: 'link',
         title: linkTitle,
@@ -162,23 +156,15 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
     }
   
     try {
-      // send file to backend
       const formData = new FormData();
       formData.append("pdf", file);
-      console.log("Backend URL:", import.meta.env.VITE_BACKEND_URL);
-      console.log("File being sent:", file.name, file.size, file.type);
       
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/embed-pdf`, {
         method: "POST",
         body: formData,
       }).catch(error => {
-        console.error("Fetch error:", error);
         throw new Error(`Network error: ${error.message}`);
       });
-
-      console.log("Response status:", res.status);
-      console.log("Response ok:", res.ok);
-      console.log("Response headers:", Object.fromEntries(res.headers.entries()));
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({ error: "Failed to parse error response" }));
@@ -186,18 +172,13 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
       }
 
       const result = await res.json();
-      console.log("Backend response:", result);
 
-      // Once backend confirms embedding success, update UI state
       onAddSource({
         type: "pdf",
         title: file.name,
         fileName: file.name,
       });
 
-      // Only clear chat, don't clear sources
-      // Clear chat
-      // Clear all sources from UI
       sources.forEach(source => {
         onRemoveSource(source.id);
       });
@@ -215,7 +196,6 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
       });
     }
   
-    // Reset the input
     event.target.value = "";
   };
 
@@ -231,9 +211,7 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
       }
 
       const result = await res.json();
-      console.log("Clear sources response:", result);
 
-      // Clear all sources from UI
       sources.forEach(source => {
         onRemoveSource(source.id);
       });
@@ -278,7 +256,6 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
 
   return (
     <div className="flex flex-col h-full bg-surface border-r border-border">
-      {/* Header */}
       <div className="p-4 border-b border-border bg-gradient-surface">
         <div className="flex items-center justify-between">
           <div>
@@ -300,7 +277,6 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
         </div>
       </div>
 
-      {/* Add Source Controls */}
       <div className="p-4 space-y-3 border-b border-border">
         <div className="flex flex-wrap gap-2">
           <Button
@@ -339,7 +315,6 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
           </Button>
         </div>
 
-        {/* Text Input Form */}
         {showTextInput && (
           <Card className="p-3 bg-notebook-paper shadow-sm">
             <div className="space-y-3">
@@ -372,7 +347,6 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
           </Card>
         )}
 
-        {/* Link Input Form */}
         {showLinkInput && (
           <Card className="p-3 bg-notebook-paper shadow-sm">
             <div className="space-y-3">
@@ -405,7 +379,6 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
         )}
       </div>
 
-      {/* Sources List */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {sources.length === 0 ? (
           <div className="text-center text-text-muted py-8">
