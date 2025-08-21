@@ -265,7 +265,7 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
               variant="destructive"
               size="sm"
               onClick={handleClearAllSources}
-              className="text-xs"
+              className="text-xs hover:animate-pulse-subtle hover:scale-105 active:scale-95 transition-all duration-200"
             >
               Clear All
             </Button>
@@ -279,14 +279,14 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
             variant="outline"
             size="sm"
             onClick={() => setShowTextInput(!showTextInput)}
-            className="flex-1 min-w-0"
+            className="flex-1 min-w-0 hover:scale-105 active:scale-95 transition-all duration-200"
           >
             <Plus className="h-4 w-4 mr-1" />
             Text
           </Button>
           
           <label className="flex-1 min-w-0">
-            <Button variant="outline" size="sm" className="w-full cursor-pointer" asChild>
+            <Button variant="outline" size="sm" className="w-full cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200" asChild>
               <span>
                 <Upload className="h-4 w-4 mr-1" />
                 PDF
@@ -304,7 +304,7 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
             variant="outline"
             size="sm"
             onClick={() => setShowLinkInput(!showLinkInput)}
-            className="flex-1 min-w-0"
+            className="flex-1 min-w-0 hover:scale-105 active:scale-95 transition-all duration-200"
           >
             <Link className="h-4 w-4 mr-1" />
             Link
@@ -312,23 +312,24 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
         </div>
 
         {showTextInput && (
-          <Card className="p-3 bg-notebook-paper shadow-sm">
+          <Card className="p-3 bg-notebook-paper shadow-sm animate-slide-in-up">
             <div className="space-y-3">
               <Textarea
                 placeholder="Paste your text content here..."
                 value={textContent}
                 onChange={(e) => setTextContent(e.target.value)}
                 rows={4}
-                className="text-sm resize-none"
+                className="text-sm resize-none transition-all duration-300 focus:ring-4 focus:ring-primary/30 focus:border-primary"
               />
               <div className="flex gap-2">
-                <Button size="sm" onClick={handleTextSubmit} className="flex-1">
+                <Button size="sm" onClick={handleTextSubmit} className="flex-1 hover:animate-pulse-subtle active:scale-95 transition-all duration-300">
                   Add Source
                 </Button>
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => setShowTextInput(false)}
+                  className="hover:scale-105 active:scale-95 transition-all duration-200"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -338,22 +339,23 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
         )}
 
         {showLinkInput && (
-          <Card className="p-3 bg-notebook-paper shadow-sm">
+          <Card className="p-3 bg-notebook-paper shadow-sm animate-slide-in-up">
             <div className="space-y-3">
               <Input
                 placeholder="https://example.com"
                 value={linkUrl}
                 onChange={(e) => setLinkUrl(e.target.value)}
-                className="text-sm"
+                className="text-sm transition-all duration-300 focus:ring-4 focus:ring-primary/30 focus:border-primary"
               />
               <div className="flex gap-2">
-                <Button size="sm" onClick={handleLinkSubmit} className="flex-1">
+                <Button size="sm" onClick={handleLinkSubmit} className="flex-1 hover:animate-pulse-subtle active:scale-95 transition-all duration-300">
                   Add Link
                 </Button>
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => setShowLinkInput(false)}
+                  className="hover:scale-105 active:scale-95 transition-all duration-200"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -371,13 +373,13 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
             <p className="text-xs mt-1">Add text, PDFs, or links to get started</p>
           </div>
         ) : (
-          sources.map((source) => (
-            <Card key={source.id} className="p-3 bg-notebook-paper shadow-sm hover:shadow transition-shadow">
+          sources.map((source, index) => (
+            <Card key={source.id} className={`p-3 bg-notebook-paper shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 animate-slide-in-left animate-fill-both animate-delay-${Math.min(index * 50, 300)}`}>
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     {getSourceIcon(source.type)}
-                    <Badge variant={getSourceBadgeVariant(source.type)} className="text-xs">
+                    <Badge variant={getSourceBadgeVariant(source.type)} className="text-xs hover:scale-105 transition-transform duration-200">
                       {source.type.toUpperCase()}
                     </Badge>
                   </div>
@@ -402,7 +404,7 @@ export const SourceManager: React.FC<SourceManagerProps> = ({
                   size="sm"
                   variant="ghost"
                   onClick={() => onRemoveSource(source.id)}
-                  className="h-8 w-8 p-0 text-text-muted hover:text-destructive"
+                  className="h-8 w-8 p-0 text-text-muted hover:text-destructive hover:scale-110 active:scale-90 transition-all duration-200"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

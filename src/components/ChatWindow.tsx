@@ -67,12 +67,12 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading }) =
             </p>
           </div>
         ) : (
-          messages.map((message) => (
+          messages.map((message, index) => (
             <div
               key={message.id}
               className={`flex gap-4 ${
                 message.type === 'user' ? 'justify-end' : 'justify-start'
-              }`}
+              } animate-slide-in-up animate-fill-both animate-delay-${Math.min(index * 50, 300)}`}
             >
               {message.type === 'assistant' && (
                 <div className="flex-shrink-0">
@@ -140,9 +140,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading }) =
         )}
         
         {isLoading && (
-          <div className="flex gap-4 justify-start">
+          <div className="flex gap-4 justify-start animate-fade-in">
             <div className="flex-shrink-0">
-              <div className="bg-gradient-primary rounded-full p-2 w-8 h-8 flex items-center justify-center">
+              <div className="bg-gradient-primary-vibrant rounded-full p-2 w-8 h-8 flex items-center justify-center animate-pulse">
                 <Bot className="h-4 w-4 text-white" />
               </div>
             </div>
@@ -150,7 +150,11 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading }) =
             <div className="max-w-2xl">
               <Card className="p-4 shadow-notebook bg-notebook-paper">
                 <div className="flex items-center gap-2 text-text-muted">
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                  </div>
                   <span className="text-sm">Thinking...</span>
                 </div>
               </Card>

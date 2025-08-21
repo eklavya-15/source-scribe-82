@@ -143,12 +143,13 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(({ onSendMessa
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your message..."
           disabled={isLoading}
-          className="flex-1"
+          className="flex-1 transition-all duration-300 focus:ring-4 focus:ring-primary/30 focus:border-primary"
         />
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           disabled={!message.trim() || isLoading}
           size="sm"
+          className="hover:animate-pulse-subtle active:scale-95 transition-all duration-300"
         >
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
